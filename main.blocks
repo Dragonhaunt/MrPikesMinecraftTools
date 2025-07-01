@@ -1,0 +1,10 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="pxt-on-start"></block>
+  <block type="minecraftOnChat">
+    <value name="command">
+      <shadow type="text">
+        <field name="TEXT">run</field>
+      </shadow>
+    </value>
+  </block>
+</xml>
