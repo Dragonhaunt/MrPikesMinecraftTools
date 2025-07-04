@@ -6,8 +6,8 @@ player.onChat("turnagent", function (radius) {
     player.say(agent.getOrientation())
 })
 
-player.onChat("moveagent", function(distance){
-    agent.move(FORWARD,distance)
+player.onChat("moveagent", function (distance) {
+    agent.move(FORWARD, distance)
 })
 
 player.onChat("getagent", function () {
@@ -18,12 +18,12 @@ player.onChat("agentorientation", function () {
     player.say(agent.getOrientation())
 })
 
-player.onChat("autobuild", function(num3){
-    if(num3 > 0){
-        for(y6 = 0; y6 < num3; y6++){
+player.onChat("autobuild", function (num3) {
+    if (num3 > 0) {
+        for (y6 = 0; y6 < num3; y6++) {
             autoBuildSegment()
         }
-    }else{
+    } else {
         autoBuildForever()
     }
 })
@@ -33,54 +33,58 @@ function autoBuildForever() {
     while (!error) {
         error = autoBuildSegment()
     }
+    player.say("Autobuilder Canceled: Error returned.")
 }
 
 function autoBuildSegment() {
-    mobs.applyEffect(SPEED, mobs.target(MY_AGENT), 120, 1)
-    mobs.applyEffect(HASTE, mobs.target(MY_AGENT), 120, 1)
+    mobs.applyEffect(SPEED, mobs.target(MY_AGENT), 120, 10)
+    mobs.applyEffect(HASTE, mobs.target(MY_AGENT), 120, 10)
     colourID = randint(0, 15)
-    let r1 = randint(0,5)
+    let r1 = randint(0, 5)
     let error = false
-    switch(r1){
+    switch (r1) {
         case 0:
         case 1:
         case 2:     // Tunnel forward
-            tunnelSegment(randint(17, 128), 3, 3)
-        break;
-        case 3:     // Change direction
-            if(randint(0,1)==0){
-                agent.turnLeft()
-                agent.move(LEFT,3)
-            }else{
-                agent.turnRight()
-                agent.move(FORWARD,3)
-            }
             error = tunnelSegment(randint(17, 128), 3, 3)
-        break;
+            break;
+        case 3:     // Change direction
+            error = tunnelSegment(3, 3, 3)
+            if (!error) {
+                if (randint(0, 1) == 0) {
+                    agent.turnLeft()
+                    agent.move(LEFT, 3)
+                } else {
+                    agent.turnRight()
+                    agent.move(FORWARD, 3)
+                }
+                error = tunnelSegment(randint(17, 128), 3, 3)
+            }
+            break;
         case 4:     // Change elevation
             if (randint(0, 1) == 0)
-                error = tunnelUp(randint(32, 128), 3, 3)
+                error = tunnelUp(8, 3, 3)
             else
-                error = tunnelDown(randint(32, 128), 3, 3)
-        break;
+                error = tunnelDown(8, 3, 3)
+            break;
         case 5:     // Do something interesting
-        {
-            let r2 = randint(0,4)
-            switch(r2){
-                case 0: // Change colour
-                    colourID = randint(0, 15)
-                break;
-                case 1: // Change theme
-                break;
-                case 2: // Create rooms
-                break;
-                case 3: // Create tower
-                break;
-                case 4: // Create something else cool
-                break;
+            {
+                let r2 = randint(0, 4)
+                switch (r2) {
+                    case 0: // Change colour
+                        colourID = randint(0, 15)
+                        break;
+                    case 1: // Change theme
+                        break;
+                    case 2: // Create rooms
+                        break;
+                    case 3: // Create tower
+                        break;
+                    case 4: // Create something else cool
+                        break;
+                }
             }
-        }
-        break;
+            break;
     }
     return error;
 }
@@ -584,7 +588,7 @@ function towersurprise() {
             TNT,
             FURNACE,
             CRAFTING_TABLE,
-            blocks.blockWithData(BED,colourID),
+            blocks.blockWithData(BED, colourID),
             JUKEBOX,
             JACK_O_LANTERN,
             CAKE,
@@ -613,15 +617,15 @@ function towersurprise() {
         agent.setItem(list._pickRandom(), 1, 8)
         agent.place(DOWN)
     } else if (index62 == 4) {
-        agent.move(FORWARD,1)
-        agent.move(RIGHT,1)
-        agent.move(UP,1)
-        agent.setItem(CHAIN,1,8)
+        agent.move(FORWARD, 1)
+        agent.move(RIGHT, 1)
+        agent.move(UP, 1)
+        agent.setItem(CHAIN, 1, 8)
         agent.place(UP)
-        agent.move(DOWN,1)
-        agent.setItem(BELL,1,8)
+        agent.move(DOWN, 1)
+        agent.setItem(BELL, 1, 8)
         agent.place(UP)
-        agent.move(LEFT,1)
+        agent.move(LEFT, 1)
         agent.move(BACK, 1)
     } else {
         agent.move(FORWARD, 1)
@@ -664,9 +668,9 @@ player.onChat("tunneldown", function (distance, width, height) {
     tunnelDown(distance, width, height)
 })
 
-function tunnelDown(distance: number, width: number, height: number){
+function tunnelDown(distance: number, width: number, height: number) {
     agent.setAssist(DESTROY_OBSTACLES, true)
-    torchfrequency = 5
+    torchfrequency = 8
     let error = false
     agent.setSlot(1)
     for (let index = 0; index < distance - 1; index++) {
@@ -738,12 +742,12 @@ function tunnelDown(distance: number, width: number, height: number){
 }
 
 player.onChat("tunnelup", function (distance, width, height) {
-    tunnelUp(distance,width,height)
+    tunnelUp(distance, width, height)
 })
 
-function tunnelUp(distance: number, width: number, height: number){
+function tunnelUp(distance: number, width: number, height: number) {
     agent.setAssist(DESTROY_OBSTACLES, true)
-    torchfrequency = 5
+    torchfrequency = 8
     agent.setSlot(1)
     let error = false
     for (let index = 0; index < distance; index++ && !error) {
